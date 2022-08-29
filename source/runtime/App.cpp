@@ -2,28 +2,36 @@
 
 namespace solis
 {
-        void SolisApp::initWindow(int width, int height) {
-            glfwInit();
+    void SolisApp::Run()
+    {
+        InitWindow();
+        InitVulkan();
+        MainLoop();
+        CleanUp();
+    }
 
-            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    void SolisApp::InitWindow(int width, int height) {
+        glfwInit();
 
-            window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+        window_ = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
+    }
+
+    void SolisApp::InitVulkan() {
+
+    }
+
+    void SolisApp::MainLoop() {
+        while (!glfwWindowShouldClose(window_)) {
+            glfwPollEvents();
         }
+    }
 
-        void SolisApp::initVulkan() {
+    void SolisApp::CleanUp() {
+        glfwDestroyWindow(window_);
 
-        }
-
-        void SolisApp::mainLoop() {
-            while (!glfwWindowShouldClose(window)) {
-                glfwPollEvents();
-            }
-        }
-
-        void SolisApp::cleanup() {
-            glfwDestroyWindow(window);
-
-            glfwTerminate();
-        }
+        glfwTerminate();
+    }
 }

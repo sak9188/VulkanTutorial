@@ -12,8 +12,9 @@ const uint32_t HEIGHT = 600;
 int main() {
     solis::SolisApp app;
 
-    try {
-        app.run();
+    try
+    {
+        app.Run();
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;

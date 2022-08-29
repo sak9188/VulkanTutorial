@@ -1,3 +1,6 @@
+#ifndef __APP_H__
+#define __APP_H__
+
 #include "Config.h"
 
 #define GLFW_INCLUDE_VULKAN
@@ -7,22 +10,19 @@ namespace solis
 {
     class SOLIS_API SolisApp{
     public:
-        void run() {
-            initWindow();
-            initVulkan();
-            mainLoop();
-            cleanup();
-        }
+        void Run();
 
     private:
-        GLFWwindow* window;
+        GLFWwindow* window_;
 
-        void initWindow(int width=800, int height=600);
+        void InitWindow(int width=800, int height=600);
 
-        void initVulkan();
+        void InitVulkan();
 
-        void mainLoop();
+        void MainLoop();
 
-        void cleanup();
+        void CleanUp();
     };
 }
+
+#endif
