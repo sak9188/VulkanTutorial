@@ -24,9 +24,16 @@ source_group(TREE ${PROJECT_INCLUDE_PATH}
 )
 
 # 编译这个lib
-add_executable(solis ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+# add_executable(solis ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+add_library(solis SHARED ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 
 find_package(Vulkan REQUIRED)
+
+target_compile_definitions(
+    solis
+    PRIVATE
+        SOLIS_API_EXPORT
+)
 
 target_link_libraries(
     solis
@@ -53,5 +60,12 @@ set_target_properties(
 set_target_properties(
     solis 
     PROPERTIES
-        OUTPUT_NAME "solisCore"
+        OUTPUT_NAME "solis"
+)
+
+# 指定输出路径
+set_target_properties(solis PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
+    LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
+    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
 )
