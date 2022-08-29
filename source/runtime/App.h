@@ -6,6 +6,10 @@
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
+#include "memory"
+
+#include "RenderInterface.h"
+
 namespace solis
 {
     class SOLIS_API SolisApp{
@@ -13,6 +17,8 @@ namespace solis
         void Run();
 
     private:
+        std::unique_ptr<RenderInterface> renderer_;
+
         GLFWwindow* window_;
 
         void InitWindow(int width=800, int height=600);

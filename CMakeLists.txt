@@ -18,6 +18,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 add_definitions("-DUNICODE -D_UNICODE")
 add_compile_options(/utf-8)
 
+# Unix上生成Clangd可识别的IncludePath json文件
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # does not produce the json file
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
+
 # 设置自定义CMake模块目录
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty)
 

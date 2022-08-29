@@ -19,17 +19,23 @@ namespace solis
         window_ = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
     }
 
-    void SolisApp::InitVulkan() {
-
+    void SolisApp::InitVulkan() 
+    {
+        renderer_ = std::make_unique<RenderInterface>();
     }
 
-    void SolisApp::MainLoop() {
-        while (!glfwWindowShouldClose(window_)) {
+    void SolisApp::MainLoop() 
+    {
+        while (!glfwWindowShouldClose(window_)) 
+        {
             glfwPollEvents();
         }
     }
 
-    void SolisApp::CleanUp() {
+    void SolisApp::CleanUp() 
+    {
+        renderer_ = nullptr;
+
         glfwDestroyWindow(window_);
 
         glfwTerminate();

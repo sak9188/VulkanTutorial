@@ -341,17 +341,17 @@ configure_file(src/glfw3.pc.in src/glfw3.pc @ONLY)
 #--------------------------------------------------------------------
 add_subdirectory(src)
 
-if (GLFW_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
+# if (GLFW_BUILD_EXAMPLES)
+    # add_subdirectory(examples)
+# endif()
 
-if (GLFW_BUILD_TESTS)
-    add_subdirectory(tests)
-endif()
+# if (GLFW_BUILD_TESTS)
+    # add_subdirectory(tests)
+# endif()
 
-if (DOXYGEN_FOUND AND GLFW_BUILD_DOCS)
-    add_subdirectory(docs)
-endif()
+# if (DOXYGEN_FOUND AND GLFW_BUILD_DOCS)
+    # add_subdirectory(docs)
+# endif()
 
 #--------------------------------------------------------------------
 # Install files other than the library
@@ -372,14 +372,14 @@ if (GLFW_INSTALL)
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
     # Only generate this target if no higher-level project already has
-    if (NOT TARGET uninstall)
-        configure_file(cmake_uninstall.cmake.in
-                       cmake_uninstall.cmake IMMEDIATE @ONLY)
+    # if (NOT TARGET uninstall)
+        # configure_file(cmake_uninstall.cmake.in
+                       # cmake_uninstall.cmake IMMEDIATE @ONLY)
 
-        add_custom_target(uninstall
-                          "${CMAKE_COMMAND}" -P
-                          "${GLFW_BINARY_DIR}/cmake_uninstall.cmake")
-        set_target_properties(uninstall PROPERTIES FOLDER "GLFW3")
-    endif()
+        # add_custom_target(uninstall
+                          # "${CMAKE_COMMAND}" -P
+                          # "${GLFW_BINARY_DIR}/cmake_uninstall.cmake")
+        # set_target_properties(uninstall PROPERTIES FOLDER "GLFW3")
+    # endif()
 endif()
 
