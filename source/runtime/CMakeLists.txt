@@ -50,6 +50,12 @@ target_include_directories(
         ${ENGINE_SOURCE_PATH}
 )
 
+target_compile_definitions(
+    solis
+    PRIVATE
+        VK_VALIDATION_REQURED
+)
+
 # 项目分租
 set_target_properties(
     solis 
