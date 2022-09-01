@@ -24,7 +24,7 @@ namespace solis
         VkInstance instance_;
 
         // 获得层的扩展
-        std::vector<const char*>&& getRequiredExtensions();
+        std::vector<const char*> getRequiredExtensions();
 
         // 是否开启验证层
         constexpr bool validationEnable() 

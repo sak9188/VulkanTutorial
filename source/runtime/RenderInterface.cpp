@@ -66,7 +66,7 @@ namespace solis
         vkDestroyInstance(instance_, nullptr);
     }
 
-    std::vector<const char*>&& RenderInterface::getRequiredExtensions()
+    std::vector<const char*> RenderInterface::getRequiredExtensions()
     {
         // 在这里检查一下支持哪些扩展
         uint32_t extensionCount{0};
@@ -99,7 +99,7 @@ namespace solis
         std::cout << "before move 0:" << &extensions << "\n";
         std::cout << "before move 1:" << static_cast<void*>(extensions.data()) << "\n";
 
-        return std::move(extensions);
+        return extensions;
     }
 
     bool RenderInterface::checkValidationLayerSupport()
