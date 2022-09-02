@@ -34,7 +34,7 @@ namespace solis
 
     void SolisApp::CleanUp() 
     {
-        renderer_ = nullptr;
+        renderer_.release();
 
         glfwDestroyWindow(window_);
 

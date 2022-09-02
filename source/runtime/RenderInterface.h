@@ -21,7 +21,13 @@ namespace solis
     private:
         static const std::vector<const char*> validationLayers;
 
+        // GPU
+        VkPhysicalDevice physicalDevice_;
+
+        // Instance
         VkInstance instance_;
+
+        VkDebugUtilsMessengerEXT debugMessenger_;
 
         // 获得层的扩展
         std::vector<const char*> getRequiredExtensions();
@@ -39,7 +45,13 @@ namespace solis
         // 检查验证层是否支持
         bool checkValidationLayerSupport();
 
-        
+        // 创建Vulkan Debug Messenger
+        void enableDebugMessenger();
+        void disableDebugMessenger();
+
+        // 创建Vulkan PhyInstance
+        void InitPhysicalDevice();
+
     };
 } // namespace solisc
 
