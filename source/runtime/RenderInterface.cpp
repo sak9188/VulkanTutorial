@@ -3,13 +3,53 @@
 #include <iostream>
 #include <cstring>
 
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include "GLFW/glfw3native.h"
+
 namespace solis
 {
     const std::vector<const char*> RenderInterface::validationLayers = {
         "VK_LAYER_KHRONOS_validation" 
     };
 
-    RenderInterface::RenderInterface()
+    RenderInterface::RenderInterface(GLFWwindow* window) : window_(window)
+    {
+        // init vulkan instance
+        initVulkan();
+
+        // init surface
+        initSurface();
+
+        // 初始化物理设备
+        initPhysicalDevice();
+
+        // 初始化逻辑设备
+        initDevice();
+    }
+
+    RenderInterface::~RenderInterface()
+    {
+        std::cout << "render interface over \n"; 
+
+        if(device_ != nullptr)
+        {
+            vkDestroyDevice(device_, nullptr);
+        }
+
+        if(surface_ != nullptr)
+        {
+            vkDestroySurfaceKHR(instance_, surface_, nullptr);
+        }
+
+        disableDebugMessenger();
+
+        if(instance_ != nullptr)
+        {
+            vkDestroyInstance(instance_, nullptr);
+        }
+    }
+
+    void RenderInterface::initVulkan()
     {
         // 初始化Vulkan
         // VKAppInfo
@@ -49,35 +89,11 @@ namespace solis
             createInfo.enabledLayerCount = 0;
         }
 
-
         // 导致VK创建失败
         VkResult ret = vkCreateInstance(&createInfo, nullptr, &instance_);
         if (ret != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create instance");
-        }
-
-        // 初始化物理设备
-        initPhysicalDevice();
-
-        // 初始化逻辑设备
-        initDevice();
-    }
-
-    RenderInterface::~RenderInterface()
-    {
-        std::cout << "render interface over \n"; 
-
-        if(device_ != nullptr)
-        {
-            vkDestroyDevice(device_, nullptr);
-        }
-
-        disableDebugMessenger();
-
-        if(instance_ != nullptr)
-        {
-            vkDestroyInstance(instance_, nullptr);
         }
     }
 
@@ -96,7 +112,6 @@ namespace solis
         {
             std::cout << '\t' << extension.extensionName << '\n';
         }
-
 
         // 这里载入需要的扩展
         uint32_t glfwExtensionCount = 0;
@@ -208,6 +223,19 @@ namespace solis
         std::cout << "device type: " << deviceProperties.deviceType << std::endl;
 
         return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+    }
+
+    void RenderInterface::initSurface()
+    {
+        VkWin32SurfaceCreateInfoKHR createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+        createInfo.hwnd = glfwGetWin32Window(window_);
+        createInfo.hinstance = GetModuleHandle(nullptr);
+
+        if(glfwCreateWindowSurface(instance_, window_, nullptr, &surface_) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create window surface!");
+        }
     }
 
     void RenderInterface::initPhysicalDevice()

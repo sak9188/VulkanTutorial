@@ -2,10 +2,12 @@
 #define __RENDERINTERFACE_H__
 
 #define GLFW_INCLUDE_VULKAN
+#define VK_USE_PLATFORM_WIN32_KHR
 #include "GLFW/glfw3.h"
 #include "Config.h"
 
 #include <vector>
+#include <memory>
 
 namespace solis
 {
@@ -13,13 +15,14 @@ namespace solis
     class SOLIS_API RenderInterface
     {
     public:
-        RenderInterface();
+        RenderInterface(GLFWwindow* window);
 
         virtual ~RenderInterface();
 
-
     private:
         static const std::vector<const char*> validationLayers;
+
+        GLFWwindow* window_;
 
         // Instance
         VkInstance instance_;
@@ -30,6 +33,7 @@ namespace solis
         // Logic Device
         VkDevice device_;
 
+        // Debug Messager
         VkDebugUtilsMessengerEXT debugMessenger_;
 
         // Queue Family
@@ -37,6 +41,9 @@ namespace solis
 
         // Queue
         VkQueue graphicsQueue_;
+
+        // surface
+        VkSurfaceKHR surface_;
 
         // 获得层的扩展
         std::vector<const char*> getRequiredExtensions();
@@ -57,6 +64,12 @@ namespace solis
         // 创建Vulkan Debug Messenger
         void enableDebugMessenger();
         void disableDebugMessenger();
+
+        // 初始化Vulkan的Instance
+        void initVulkan();
+
+        // 创建Vulkan的Surface
+        void initSurface();
 
         // 创建Vulkan PhyInstance
         void initPhysicalDevice();

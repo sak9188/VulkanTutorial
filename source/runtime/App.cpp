@@ -21,7 +21,7 @@ namespace solis
 
     void SolisApp::InitVulkan() 
     {
-        renderer_ = std::make_unique<RenderInterface>();
+        renderer_ = std::make_unique<RenderInterface>(window_);
     }
 
     void SolisApp::MainLoop() 
