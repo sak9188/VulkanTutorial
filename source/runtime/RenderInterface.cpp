@@ -49,6 +49,7 @@ namespace solis
             createInfo.enabledLayerCount = 0;
         }
 
+
         // 导致VK创建失败
         VkResult ret = vkCreateInstance(&createInfo, nullptr, &instance_);
         if (ret != VK_SUCCESS)
@@ -57,12 +58,20 @@ namespace solis
         }
 
         // 初始化物理设备
-        InitPhysicalDevice();
+        initPhysicalDevice();
+
+        // 初始化逻辑设备
+        initDevice();
     }
 
     RenderInterface::~RenderInterface()
     {
         std::cout << "render interface over \n"; 
+
+        if(device_ != nullptr)
+        {
+            vkDestroyDevice(device_, nullptr);
+        }
 
         disableDebugMessenger();
 
@@ -201,7 +210,7 @@ namespace solis
         return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
     }
 
-    void RenderInterface::InitPhysicalDevice()
+    void RenderInterface::initPhysicalDevice()
     {
         // 在这里检查一下支持哪些设备
         uint32_t deviceCount = 0;
@@ -225,6 +234,56 @@ namespace solis
         {
             throw std::runtime_error("failed to find a suitable GPU!");
         }
+    }
+
+    VkDeviceQueueCreateInfo RenderInterface::initQueue()
+    {
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice_, &queueFamilyCount, nullptr);
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice_, &queueFamilyCount, queueFamilies.data());
+
+        int i = 0;
+        for (const auto& queueFamily : queueFamilies)
+        {
+            if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            {
+                graphicsQueueFamilyIndex_ = i;
+                break;
+            }
+            i++;
+        }
+
+        // 初始化Queue
+        VkDeviceQueueCreateInfo queueCreateInfo{};
+        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex_;
+        queueCreateInfo.queueCount = 1;
+        float queuePriority = 1.0f;
+        queueCreateInfo.pQueuePriorities = &queuePriority;
+
+        return queueCreateInfo;
+    }
+
+    void RenderInterface::initDevice()
+    {
+        // init Vk logical device
+        VkDeviceCreateInfo deviceCreateInfo{};
+        deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        auto queueCreateInfo = initQueue();
+        deviceCreateInfo.pQueueCreateInfos = &queueCreateInfo;
+        deviceCreateInfo.queueCreateInfoCount = 1;
+
+        VkPhysicalDeviceFeatures deviceFeatures{};
+        deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
+
+        if(vkCreateDevice(physicalDevice_, &deviceCreateInfo, nullptr, &device_) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create logical device!");
+        }
+
+        // init Vk queue
+        vkGetDeviceQueue(device_, graphicsQueueFamilyIndex_, 0, &graphicsQueue_);
     }
 
 }

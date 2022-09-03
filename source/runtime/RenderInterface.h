@@ -21,13 +21,22 @@ namespace solis
     private:
         static const std::vector<const char*> validationLayers;
 
-        // GPU
-        VkPhysicalDevice physicalDevice_;
-
         // Instance
         VkInstance instance_;
 
+        // GPU
+        VkPhysicalDevice physicalDevice_;
+
+        // Logic Device
+        VkDevice device_;
+
         VkDebugUtilsMessengerEXT debugMessenger_;
+
+        // Queue Family
+        uint32_t graphicsQueueFamilyIndex_;
+
+        // Queue
+        VkQueue graphicsQueue_;
 
         // 获得层的扩展
         std::vector<const char*> getRequiredExtensions();
@@ -50,7 +59,13 @@ namespace solis
         void disableDebugMessenger();
 
         // 创建Vulkan PhyInstance
-        void InitPhysicalDevice();
+        void initPhysicalDevice();
+
+        // 初始化Quue
+        VkDeviceQueueCreateInfo initQueue();
+
+        // 初始化逻辑设备
+        void initDevice();
 
     };
 } // namespace solisc
